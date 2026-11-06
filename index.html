@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Turbo Racer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- HUD / Painel Superior -->
+        <div id="hud">
+            <div class="hud-box">
+                <span class="hud-label">PONTOS</span>
+                <span id="score" class="hud-value">00000</span>
+            </div>
+            <div class="hud-box">
+                <span class="hud-label">VELOCIDADE</span>
+                <span id="speedometer" class="hud-value">120 <small>KM/H</small></span>
+            </div>
+        </div>
+
+        <!-- Canvas Principal -->
+        <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+        <!-- Barra de Carga de Turbo -->
+        <div id="turbo-bar-container">
+            <div id="turbo-bar"></div>
+            <span id="turbo-text">TURBO READY [ESPAÇO]</span>
+        </div>
+
+        <!-- Botões Touch para Celular/Mouse -->
+        <div id="mobile-controls">
+            <div class="dpad">
+                <button id="btnLeft" class="ctrl-btn">◄</button>
+                <button id="btnRight" class="ctrl-btn">►</button>
+            </div>
+            <button id="turboBtn" class="ctrl-btn turbo-btn">⚡ TURBO</button>
+        </div>
+
+        <!-- Tela de Game Over -->
+        <div id="gameOverScreen" class="hidden">
+            <div class="modal">
+                <h1 class="neon-text">GAME OVER</h1>
+                <p>PONTUAÇÃO FINAL</p>
+                <span id="finalScore" class="highlight-score">0</span>
+                <button id="restartBtn">JOGAR NOVAMENTE ↺</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
