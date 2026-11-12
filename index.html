@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#080810" />
+    <title>Retro Turbo Racer</title>
+
+    <link rel="stylesheet" href="css/estilos/base.css?v=3.3.0" />
+    <link rel="stylesheet" href="css/estilos/menus.css?v=3.3.0" />
+    <link rel="stylesheet" href="css/estilos/paisagem.css?v=3.3.0" />
+    <link rel="stylesheet" href="css/estilos/hud.css?v=3.3.0" />
+    <link rel="stylesheet" href="css/estilos/carregamento.css?v=3.3.0" />
+    <link rel="stylesheet" href="css/estilos/layout.css?v=3.3.0" />
+  </head>
+
+  <body class="carregando">
+    <noscript>Este jogo precisa de JavaScript ativado. / This game requires JavaScript.</noscript>
+
+    <main id="game-container">
+      <!-- HUD -->
+      <header id="hud">
+        <div class="hud-box">
+          <span class="hud-label" data-i18n="hud.pontos"></span>
+          <span id="score">00000</span>
+        </div>
+
+        <div class="hud-box">
+          <span class="hud-label" data-i18n="hud.velocidade"></span>
+          <span class="hud-valor"><span id="speedometer"></span></span>
+        </div>
+
+        <div class="hud-box">
+          <span class="hud-label" data-i18n="hud.distancia"></span>
+          <span class="hud-valor">
+            <span id="distanceometer"></span>
+            <small data-unidade="distancia"></small>
+          </span>
+        </div>
+
+        <!-- TURBO (barra no HUD) -->
+        <div id="turbo-container">
+          <div class="turbo-info">
+            <span data-i18n="termos.turbo"></span>
+            <span id="turboPercentage">100%</span>
+          </div>
+
+          <div class="turbo-track">
+            <div id="turboBar"></div>
+          </div>
+        </div>
+
+        <button
+          id="fullscreenBtn"
+          class="hud-pause-btn hud-fullscreen-btn hidden"
+          type="button"
+          data-tela-cheia="icone"
+          data-i18n-aria="acessibilidade.telaCheia"
+          aria-pressed="false"
+        >
+          ⛶
+        </button>
+
+        <button
+          id="pauseBtn"
+          class="hud-pause-btn"
+          type="button"
+          data-i18n-aria="acessibilidade.pausar"
+        >
+          ⏸
+        </button>
+      </header>
+
+      <!-- MUNDO DO JOGO -->
+      <section id="game-world">
+        <div id="environment"></div>
+
+        <canvas id="gameCanvas" width="640" height="360">
+          Seu navegador não suporta Canvas. / Your browser does not support Canvas.
+        </canvas>
+      </section>
+
+      <!-- CONTROLES PARA CELULAR -->
+      <div id="mobile-controls">
+        <button id="leftBtn" type="button" data-i18n-aria="acessibilidade.esquerda">
+          ◀
+        </button>
+
+        <button id="turboBtn" type="button" data-i18n="termos.turbo" data-i18n-aria="acessibilidade.turbo"></button>
+
+        <button id="rightBtn" type="button" data-i18n-aria="acessibilidade.direita">
+          ▶
+        </button>
+      </div>
+
+      <!-- TELA INICIAL -->
+      <section id="startScreen" class="screen">
+        <div class="menu-content">
+          <h1>RETRO TURBO RACER</h1>
+          <p data-i18n="menu.subtitulo"></p>
+          <p id="carregamentoAviso" class="carregamento-aviso" data-i18n="carregamento.aviso"></p>
+
+          <div class="menu-buttons">
+            <button id="playBtn" class="menu-btn" type="button" data-i18n="menu.jogar"></button>
+
+            <button id="recordsBtn" class="menu-btn" type="button" data-i18n="menu.recordes"></button>
+
+            <button id="optionsBtn" class="menu-btn" type="button" data-i18n="menu.opcoes"></button>
+          </div>
+
+          <div class="seletor-idioma" data-seletor-idioma></div>
+
+          <p id="versaoDoJogo" class="versao-do-jogo"></p>
+        </div>
+      </section>
+
+      <!-- TELA DE PAUSA -->
+      <section id="pauseScreen" class="screen hidden">
+        <div class="menu-content">
+          <h2 data-i18n="pausa.titulo"></h2>
+
+          <div class="pause-options">
+            <button id="resumeBtn" class="menu-btn" type="button" data-i18n="pausa.continuar"></button>
+
+            <button id="soundBtn" class="menu-btn" type="button"></button>
+
+            <button class="menu-btn hidden" type="button" data-tela-cheia="texto"></button>
+
+            <button id="particlesBtn" class="menu-btn" type="button"></button>
+
+            <div class="seletor-idioma" data-seletor-idioma></div>
+
+            <button id="quitBtn" class="menu-btn-danger" type="button" data-i18n="pausa.sair"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- FIM DE JOGO -->
+      <section id="gameOverScreen" class="screen hidden">
+        <div class="menu-content">
+          <h2 data-i18n="fimDeJogo.titulo"></h2>
+
+          <p><span data-i18n="fimDeJogo.pontuacao"></span> <span id="finalScore">00000</span></p>
+          <p id="finalExtras" class="final-extras"></p>
+
+          <button id="restartBtn" class="menu-btn" type="button" data-i18n="fimDeJogo.jogarNovamente"></button>
+
+          <button id="backToMenuBtn" class="menu-btn" type="button" data-i18n="fimDeJogo.menuPrincipal"></button>
+        </div>
+      </section>
+
+      <!-- RECORDES -->
+      <section id="recordsScreen" class="screen hidden">
+        <div class="menu-content">
+          <h2 data-i18n="menu.recordes"></h2>
+
+          <div id="recordsList"></div>
+
+          <button id="closeRecordsBtn" class="menu-btn" type="button" data-i18n="comum.voltar"></button>
+        </div>
+      </section>
+
+      <!-- OPÇÕES -->
+      <section id="optionsScreen" class="screen hidden">
+        <div class="menu-content">
+          <h2 data-i18n="menu.opcoes"></h2>
+
+          <button id="optionsSoundBtn" class="menu-btn" type="button"></button>
+
+          <button id="optionsParticlesBtn" class="menu-btn" type="button"></button>
+
+          <button class="menu-btn hidden" type="button" data-tela-cheia="texto"></button>
+
+          <div class="seletor-idioma" data-seletor-idioma></div>
+
+          <button id="closeOptionsBtn" class="menu-btn" type="button" data-i18n="comum.voltar"></button>
+        </div>
+      </section>
+
+      <!-- AVISO: CELULAR NA VERTICAL -->
+      <section id="girar-aparelho" class="screen hidden" role="alert" aria-live="assertive">
+        <div class="girar-conteudo">
+          <div class="girar-icone" aria-hidden="true"><span></span></div>
+          <h2 data-i18n="girar.titulo"></h2>
+          <p data-i18n="girar.texto"></p>
+        </div>
+      </section>
+    </main>
+
+    <!-- INÍCIO: versão, diagnóstico de erros e compatibilidade (carregam primeiro) -->
+    <script src="js/inicio/versao.js?v=3.3.0"></script>
+    <script src="js/inicio/diagnostico.js?v=3.3.0"></script>
+    <script src="js/inicio/compatibilidade.js?v=3.3.0"></script>
+
+    <!-- IDIOMAS (núcleo, formatação, textos de cada idioma e ligação com o HTML) -->
+    <script src="js/idiomas/nucleo.js?v=3.3.0"></script>
+    <script src="js/idiomas/formatacao.js?v=3.3.0"></script>
+    <script src="js/idiomas/textos/pt.js?v=3.3.0"></script>
+    <script src="js/idiomas/textos/en.js?v=3.3.0"></script>
+    <script src="js/idiomas/interface.js?v=3.3.0"></script>
+
+    <!-- CONFIGURAÇÕES (canvas, estado e constantes) -->
+    <script src="js/config.js?v=3.3.0"></script>
+
+    <!-- PERSPECTIVA E PISTA (perspectiva.js é a única fonte de projeção) -->
+    <script src="js/pista/perspectiva.js?v=3.3.0"></script>
+    <script src="js/pista/trajeto/tracado.js?v=3.3.0"></script>
+    <script src="js/pista/trajeto/perfil.js?v=3.3.0"></script>
+    <script src="js/pista/ceu.js?v=3.3.0"></script>
+    <script src="js/pista/terreno.js?v=3.3.0"></script>
+    <script src="js/pista/acostamento.js?v=3.3.0"></script>
+    <script src="js/pista/marcadores.js?v=3.3.0"></script>
+    <script src="js/pista/asfalto.js?v=3.3.0"></script>
+
+    <!-- CENÁRIOS -->
+    <script src="js/cenarios/ambiente.js?v=3.3.0"></script>
+    <script src="js/cenarios/vegetacao.js?v=3.3.0"></script>
+    <script src="js/cenarios/elementos.js?v=3.3.0"></script>
+    <script src="js/cenarios/sinalizacao.js?v=3.3.0"></script>
+    <script src="js/cenarios/construcoes.js?v=3.3.0"></script>
+    <script src="js/cenarios/atmosfera.js?v=3.3.0"></script>
+    <script src="js/cenarios/gerenciador-paisagem.js?v=3.3.0"></script>
+
+    <!-- SISTEMAS -->
+    <script src="js/sistemas/odometro.js?v=3.3.0"></script>
+    <script src="js/sistemas/forca-lateral.js?v=3.3.0"></script>
+    <script src="js/sistemas/derrapagem.js?v=3.3.0"></script>
+    <script src="js/sistemas/pontos.js?v=3.3.0"></script>
+    <script src="js/entities.js?v=3.3.0"></script>
+    <script src="js/input.js?v=3.3.0"></script>
+
+    <!-- CARROS -->
+    <script src="js/carros/player-detalhes.js?v=3.3.0"></script>
+    <script src="js/carros/player-carroceria.js?v=3.3.0"></script>
+    <script src="js/carros/player.js?v=3.3.0"></script>
+
+    <!-- OBSTÁCULOS (tudo que aparece na pista além do jogador) -->
+    <script src="js/obstaculos/tipos.js?v=3.3.0"></script>
+    <script src="js/obstaculos/criacao.js?v=3.3.0"></script>
+    <script src="js/obstaculos/faixas.js?v=3.3.0"></script>
+    <script src="js/obstaculos/comportamentos.js?v=3.3.0"></script>
+    <script src="js/obstaculos/colisao.js?v=3.3.0"></script>
+    <script src="js/obstaculos/efeitos.js?v=3.3.0"></script>
+    <script src="js/obstaculos/movimento.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho/carro.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho/caminhao.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho/moto.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho/cone.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho/barreira.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho/oleo.js?v=3.3.0"></script>
+    <script src="js/obstaculos/desenho.js?v=3.3.0"></script>
+
+    <!-- COMBO DE PONTUAÇÃO (multiplicador por desvios seguidos) -->
+    <script src="js/combo/parametros.js?v=3.3.0"></script>
+    <script src="js/combo/deteccao.js?v=3.3.0"></script>
+    <script src="js/combo/pontuacao.js?v=3.3.0"></script>
+    <script src="js/combo/hud.js?v=3.3.0"></script>
+    <script src="js/combo/som.js?v=3.3.0"></script>
+
+    <!-- QUASE-COLISÃO (risco e recompensa) -->
+    <script src="js/quase-colisao/parametros.js?v=3.3.0"></script>
+    <script src="js/quase-colisao/deteccao.js?v=3.3.0"></script>
+    <script src="js/quase-colisao/pontuacao.js?v=3.3.0"></script>
+    <script src="js/quase-colisao/feedback.js?v=3.3.0"></script>
+    <script src="js/quase-colisao/hud-sequencia.js?v=3.3.0"></script>
+    <script src="js/quase-colisao/som.js?v=3.3.0"></script>
+
+    <!-- POWER-UPS (itens coletáveis e seus efeitos) -->
+    <script src="js/powerups/parametros.js?v=3.3.0"></script>
+    <script src="js/powerups/tipos.js?v=3.3.0"></script>
+    <script src="js/powerups/estado.js?v=3.3.0"></script>
+    <script src="js/powerups/itens.js?v=3.3.0"></script>
+    <script src="js/powerups/geracao.js?v=3.3.0"></script>
+    <script src="js/powerups/efeitos.js?v=3.3.0"></script>
+    <script src="js/powerups/feedback.js?v=3.3.0"></script>
+    <script src="js/powerups/som.js?v=3.3.0"></script>
+    <script src="js/powerups/desenho/icones.js?v=3.3.0"></script>
+    <script src="js/powerups/desenho/item.js?v=3.3.0"></script>
+    <script src="js/powerups/desenho/escudo.js?v=3.3.0"></script>
+    <script src="js/powerups/hud.js?v=3.3.0"></script>
+
+    <!-- DIFICULDADE (quando e o que aparece) -->
+    <script src="js/dificuldade/niveis.js?v=3.3.0"></script>
+    <script src="js/dificuldade/padroes.js?v=3.3.0"></script>
+    <script src="js/dificuldade/diretor.js?v=3.3.0"></script>
+
+    <!-- INTERFACE -->
+    <script src="js/ecras/ui.js?v=3.3.0"></script>
+    <script src="js/ecras/hud.js?v=3.3.0"></script>
+    <script src="js/ecras/eventos.js?v=3.3.0"></script>
+    <script src="js/ecras/resumo.js?v=3.3.0"></script>
+
+    <!-- LAYOUT RESPONSIVO (tamanho do canvas, barra, controles, rotação e tela cheia) -->
+    <script src="js/layout/calculo.js?v=3.3.0"></script>
+    <script src="js/layout/desempenho.js?v=3.3.0"></script>
+    <script src="js/layout/tela-cheia.js?v=3.3.0"></script>
+    <script src="js/layout/responsivo.js?v=3.3.0"></script>
+
+    <!-- JOGO -->
+    <script src="js/game/state.js?v=3.3.0"></script>
+    <script src="js/game/reset.js?v=3.3.0"></script>
+    <script src="js/game/loop.js?v=3.3.0"></script>
+
+    <!-- MENU, OPÇÕES, RECORDES E ÁUDIO -->
+    <script src="js/tela-inicial/menu.js?v=3.3.0"></script>
+    <script src="js/tela-inicial/opcoes.js?v=3.3.0"></script>
+    <script src="js/tela-inicial/recordes.js?v=3.3.0"></script>
+    <script src="js/audio/gerenciador.js?v=3.3.0"></script>
+    <script src="js/audio/sintetizador.js?v=3.3.0"></script>
+
+    <!-- PRONTO: último script — libera o botão JOGAR -->
+    <script src="js/inicio/pronto.js?v=3.3.0"></script>
+  </body>
+</html>
