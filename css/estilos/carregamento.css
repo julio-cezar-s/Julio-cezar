@@ -1,0 +1,32 @@
+/* =====================================================
+   CARREGAMENTO
+   Enquanto os scripts carregam (body.carregando) o menu fica inerte:
+   clicar em JOGAR antes da hora deixava só a tela vazia.
+===================================================== */
+
+.carregamento-aviso {
+  display: none;
+  margin: 10px 0 0;
+  color: #7fdcff;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  animation: carregando-piscar 1s ease-in-out infinite;
+}
+
+body.carregando .carregamento-aviso { display: block; }
+
+body.carregando #startScreen .menu-btn {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+@keyframes carregando-piscar {
+  50% { opacity: 0.35; }
+}
+
+.versao-do-jogo {
+  margin: 14px 0 0;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  opacity: 0.45;
+}
